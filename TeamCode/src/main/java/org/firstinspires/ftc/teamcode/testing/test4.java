@@ -1,0 +1,33 @@
+package org.firstinspires.ftc.teamcode.testing;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+@TeleOp(name = "velo")
+public class test4 extends LinearOpMode {
+    DcMotorEx motor;
+    double currentVelocity;
+    double maxVelocity = 0.0;
+
+
+    @Override
+    public void runOpMode() {
+        motor = hardwareMap.get(DcMotorEx.class, "CoreHex");
+        waitForStart();
+
+
+        while (opModeIsActive()) {
+            currentVelocity = motor.getVelocity();
+
+            if (currentVelocity > maxVelocity) {
+                maxVelocity = currentVelocity;
+            }
+
+            telemetry.addData("current velocity", currentVelocity);
+            telemetry.addData("maximum velocity", maxVelocity);
+            telemetry.update();
+        }
+    }
+}
