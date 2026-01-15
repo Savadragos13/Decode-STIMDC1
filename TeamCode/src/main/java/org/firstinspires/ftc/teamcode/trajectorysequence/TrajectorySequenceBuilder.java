@@ -24,13 +24,15 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.Traject
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class TrajectorySequenceBuilder {
+public class TrajectorySequenceBuilder{
     private final double resolution = 0.25;
+
 
     private final TrajectoryVelocityConstraint baseVelConstraint;
     private final TrajectoryAccelerationConstraint baseAccelConstraint;
@@ -66,12 +68,13 @@ public class TrajectorySequenceBuilder {
     private double lastDisplacementTraj;
 
     public TrajectorySequenceBuilder(
-            Pose2d startPose,
-            Double startTangent,
-            TrajectoryVelocityConstraint baseVelConstraint,
-            TrajectoryAccelerationConstraint baseAccelConstraint,
-            double baseTurnConstraintMaxAngVel,
-            double baseTurnConstraintMaxAngAccel
+        Pose2d startPose,
+        Double startTangent,
+        TrajectoryVelocityConstraint baseVelConstraint,
+        TrajectoryAccelerationConstraint baseAccelConstraint,
+        double baseTurnConstraintMaxAngVel,
+        double baseTurnConstraintMaxAngAccel
+
     ) {
         this.baseVelConstraint = baseVelConstraint;
         this.baseAccelConstraint = baseAccelConstraint;
@@ -120,6 +123,8 @@ public class TrajectorySequenceBuilder {
                 baseTurnConstraintMaxAngVel, baseTurnConstraintMaxAngAccel
         );
     }
+
+
 
     public TrajectorySequenceBuilder lineTo(Vector2d endPosition) {
         return addPath(() -> currentTrajectoryBuilder.lineTo(endPosition, currentVelConstraint, currentAccelConstraint));
