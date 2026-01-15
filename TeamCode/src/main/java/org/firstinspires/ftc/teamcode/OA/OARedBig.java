@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -54,11 +56,11 @@ public class OARedBig extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
-        Trajectory trajectoryForward1 = drive.trajectoryBuilder(new Pose2d())
-                .forward(a)
+        Trajectory trajectoryForward1 = drive.trajectoryBuilder(new Pose2d(0,0,0))
+                .forward(51)
                 .build();
         Trajectory trajectoryForward2 = drive.trajectoryBuilder(trajectoryForward1.end())
-                .forward(c)
+                .splineToConstantHeading(new Vector2d(51,48),Math.toRadians(130), 15, 15)
                 .build();
         Trajectory trajectoryBackward1= drive.trajectoryBuilder(trajectoryForward2.end())
                 .back(c)
@@ -77,10 +79,9 @@ public class OARedBig extends LinearOpMode {
             sleep(4500);
             motor3.setPower(0);
             motor4.setPower(0);
-            drive.turn(Math.toRadians(b));
+
             drive.followTrajectory(trajectoryForward2);
             drive.followTrajectory(trajectoryBackward1);
-            drive.turn(Math.toRadians(-b));
         }
     }
     double clip(double val, double min, double max) {
