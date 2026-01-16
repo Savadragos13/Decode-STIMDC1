@@ -30,23 +30,22 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.util.List;
+
 /* PLAN AFACERI
-    -Plecam de la rosu, triunghiul mare, robotul drept si pe mijloc cu linia alba a triunghiului, lipit de cos
+    -Plecam de la albastru, triunghiul mare, robotul drept si pe mijloc cu linia alba a triunghiului, lipit de cos
     -Mergem inainte 51 in = ~130 cm , apoi aruncam 3 bile preincarcate
-    -Se intoarce 140 grade
+    -Se intoarce -140 grade
     -Merge inainte mai lent pentru a lua cele 3 bile de pe prima linie
-    -Merge cu spatele, se intoarce -140 grade
+    -Merge cu spatele, se intoarce 140 grade
     -Arunca bilele
     -Iesim din triunghi
  */
 
 
 
-
 @Config
-@Autonomous(name= "OARedBig")
-public class OARedBig extends LinearOpMode {
-
+@Autonomous(name= "OABlueBig")
+public class OABlueBig extends LinearOpMode {
     DcMotor motor1, motor2, motor3, motor4;
 
     VoltageSensor batteryVoltageSensor;
@@ -69,19 +68,19 @@ public class OARedBig extends LinearOpMode {
                 .forward(51)
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
-                .turn(Math.toRadians(140))
+                .turn(Math.toRadians(-140))
                 .setConstraints (new MecanumVelocityConstraint(10, TRACK_WIDTH), // Viteza maximă dorită (în loc de 10, am pus 30 ca exemplu)
-                new ProfileAccelerationConstraint(30)           // Accelerația maximă dorită
-    )
-                .lineToConstantHeading(new Vector2d(23,33))
+                        new ProfileAccelerationConstraint(30)           // Accelerația maximă dorită
+                )
+                .lineToConstantHeading(new Vector2d(23,-33))
                 .resetConstraints()
                 .waitSeconds(3)
                 .back(42)
-                .turn(Math.toRadians(-140))
+                .turn(Math.toRadians(140))
                 .build();
         TrajectorySequence traj3 = drive.trajectorySequenceBuilder(traj2.end())
-                        .lineToConstantHeading(new Vector2d(23,20))
-                        .build();
+                .lineToConstantHeading(new Vector2d(23,-20))
+                .build();
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
@@ -103,7 +102,7 @@ public class OARedBig extends LinearOpMode {
 
             motor1.setPower(-0.5);         /// pornim motoarele
             motor2.setPower(-0.1);         /// intake
-            drive.followTrajectorySequence(traj2);              ///Mergem sa luam cele 3 bile de pe prima linie + ne intoarcem in zona de aruncat
+            drive.followTrajectorySequence(traj2);              ///traiectoria2 merge sa ia cele 3 bile de pe prima linie + ne intoarcem in zona de aruncat
             motor3.setPower(compensatedPower(-0.6));    /// pregatim
             motor4.setPower(compensatedPower(0.6));     /// outakeul
             sleep(2000);
@@ -117,7 +116,7 @@ public class OARedBig extends LinearOpMode {
             motor1.setPower(0);
             motor2.setPower(0);
           /*
-            drive.followTrajectorySequence(traj3); ///iesim din triunghi
+            drive.followTrajectorySequence(traj3); ///traiectoria3 iese din triunghi
             NETESTAT
            */
         }
