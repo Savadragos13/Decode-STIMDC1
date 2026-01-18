@@ -31,22 +31,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.util.List;
 
-/* PLAN AFACERI
-    -Plecam de la rosu, triunghiul mare, robotul drept si pe mijloc cu linia alba a triunghiului, lipit de cos
-    -Mergem inainte 51 in = ~130 cm , apoi aruncam 3 bile preincarcate
-    -Se intoarce 140 grade
-    -Merge inainte mai lent pentru a lua cele 3 bile de pe prima linie
-    -Merge cu spatele, se intoarce -140 grade
-    -Arunca bilele
-    -Iesim din triunghi
- */
-
-
-
-
 @Config
-@Autonomous(name= "OARedBig")
-public class OARedBig extends LinearOpMode {
+@Autonomous(name= "OABlueSmallv2")
+
+public class OABlueSmallv2 extends LinearOpMode {
 
     DcMotor motor1, motor2, motor3, motor4;
 
@@ -61,73 +49,42 @@ public class OARedBig extends LinearOpMode {
         motor3 = hardwareMap.get(DcMotor.class, "m3");
         motor4 = hardwareMap.get(DcMotor.class, "m4");
 
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
         Pose2d startPose = new Pose2d(0, 0, 0);
         drive.setPoseEstimate(startPose);
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .forward(52)
+        TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
+                .back(4.72)
+                .turn(Math.toRadians(21.5))
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
-                .turn(Math.toRadians(140))
-                .setConstraints (new MecanumVelocityConstraint(10, TRACK_WIDTH), // Viteza maximă dorită (în loc de 10, am pus 30 ca exemplu)
-                new ProfileAccelerationConstraint(30)           // Accelerația maximă dorită
-            )
-                .lineToConstantHeading(new Vector2d(25,33))
-                .resetConstraints()
-                .waitSeconds(3)
-               // .back(43)
-                //.turn(Math.toRadians(-140))
+                .turn(Math.toRadians(-21.5))
+                .strafeRight(30)
                 .build();
-
-
-        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeLeft(5)
-                .build();
-
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            drive.followTrajectory(traj1); ///traiectoria 1 merge inainte 51 inch
-
-            motor3.setPower(compensatedPower(-0.6));  ///pregatim
-            motor4.setPower(compensatedPower(0.6));   ///outakeul
+            drive.followTrajectorySequence(traj1);
+            motor3.setPower(compensatedPower(-0.67));
+            motor4.setPower(compensatedPower(0.67));
             sleep(2000);
-
-            motor1.setPower(-0.75);         /// incepem sa aruncam bilele
-            motor2.setPower(-0.75);         /// preincarcate
+            motor1.setPower(-0.75);
+            motor2.setPower(-0.75);
             sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele
-
+            drive.followTrajectorySequence(traj2);
             motor3.setPower(0);            /// oprim motoarele
             motor4.setPower(0);            /// de outake
-
             motor1.setPower(0.5);          /// aruncam bilele care nu au fost aruncate
             motor2.setPower(0.5);          /// pentru a nu primi penalizare
             sleep(2000);        /// timp 2 secunde
-
-            motor1.setPower(-0.5);         /// pornim motoarele
-            motor2.setPower(-0.1);         /// intake
-            drive.followTrajectorySequence(traj2);              ///Mergem sa luam cele 3 bile de pe prima linie + ne intoarcem in zona de aruncat
-           /* motor3.setPower(compensatedPower(-0.6));    /// pregatim
-            motor4.setPower(compensatedPower(0.6));     /// outakeul
-            sleep(2000);
-
-            motor1.setPower(-0.75);         ///aruncam bilele
-            motor2.setPower(-0.75);
-            sleep(3000);
-*/
-            motor3.setPower(0);
-            motor4.setPower(0);
             motor1.setPower(0);
             motor2.setPower(0);
-
-
-            sleep(15000);
-           // drive.followTrajectory(traj3); ///iesim din triunghi
-
+            sleep(25000);
         }
     }
+
+
+
     double clip(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
     }
@@ -137,6 +94,5 @@ public class OARedBig extends LinearOpMode {
         telemetry.addData("voltaj", voltage);
         return clip(power, -1.0, 1.0);
     }
-
 
 }

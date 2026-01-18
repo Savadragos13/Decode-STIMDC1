@@ -55,7 +55,7 @@ public class OARedSmall extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
                         .back(4.72)
-                .turn(-21.77)
+                .turn(Math.toRadians(-21.77))
                                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                         .lineToLinearHeading(new Pose2d(-25.591,0,Math.toRadians(21.77)))

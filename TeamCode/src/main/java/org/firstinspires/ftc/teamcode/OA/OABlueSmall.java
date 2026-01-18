@@ -55,10 +55,10 @@ public class OABlueSmall extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
                 .back(4.72)
-                .turn(21.77)
+                .turn(Math.toRadians(21))
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
-                .lineToLinearHeading(new Pose2d(-25.591,0,Math.toRadians(-21.77)))
+                .lineToLinearHeading(new Pose2d(-25.591,0,Math.toRadians(Math.toRadians(-21))))
                 .build();
         waitForStart();
 
@@ -69,13 +69,10 @@ public class OABlueSmall extends LinearOpMode {
             sleep(2000);
             motor1.setPower(-0.75);
             motor2.setPower(-0.75);
-            sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele
+            sleep(5000);        /// stam 3 secunde pentru a arunca toate bilele
             drive.followTrajectorySequence(traj2);
             motor3.setPower(0);            /// oprim motoarele
             motor4.setPower(0);            /// de outake
-            motor1.setPower(0.5);          /// aruncam bilele care nu au fost aruncate
-            motor2.setPower(0.5);          /// pentru a nu primi penalizare
-            sleep(2000);        /// timp 2 secunde
             motor1.setPower(0);
             motor2.setPower(0);
             sleep(25000);

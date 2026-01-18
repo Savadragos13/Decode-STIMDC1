@@ -65,22 +65,24 @@ public class OABlueBig extends LinearOpMode {
         Pose2d startPose = new Pose2d(0, 0, 0);
         drive.setPoseEstimate(startPose);
         Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .forward(51)
+                .forward(52)
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .turn(Math.toRadians(-140))
                 .setConstraints (new MecanumVelocityConstraint(10, TRACK_WIDTH), // Viteza maximă dorită (în loc de 10, am pus 30 ca exemplu)
                         new ProfileAccelerationConstraint(30)           // Accelerația maximă dorită
                 )
-                .lineToConstantHeading(new Vector2d(23,-33))
+                .lineToConstantHeading(new Vector2d(25,-33))
                 .resetConstraints()
                 .waitSeconds(3)
-                .back(42)
-                .turn(Math.toRadians(140))
+               // .back(43)
+              //  .turn(Math.toRadians(140))
                 .build();
-        TrajectorySequence traj3 = drive.trajectorySequenceBuilder(traj2.end())
-                .lineToConstantHeading(new Vector2d(23,-20))
+
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+                .strafeRight(5)
                 .build();
+
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
@@ -103,22 +105,21 @@ public class OABlueBig extends LinearOpMode {
             motor1.setPower(-0.5);         /// pornim motoarele
             motor2.setPower(-0.1);         /// intake
             drive.followTrajectorySequence(traj2);              ///traiectoria2 merge sa ia cele 3 bile de pe prima linie + ne intoarcem in zona de aruncat
-            motor3.setPower(compensatedPower(-0.6));    /// pregatim
+           /* motor3.setPower(compensatedPower(-0.6));    /// pregatim
             motor4.setPower(compensatedPower(0.6));     /// outakeul
             sleep(2000);
 
-            motor1.setPower(-0.75);         ///aruncam bilele
+            motor1.setPower(-0.75);         ///arunc-am bilele
             motor2.setPower(-0.75);
             sleep(3000);
-
+*/
             motor3.setPower(0);
             motor4.setPower(0);
             motor1.setPower(0);
             motor2.setPower(0);
-          /*
-            drive.followTrajectorySequence(traj3); ///traiectoria3 iese din triunghi
-            NETESTAT
-           */
+    sleep(15000);
+            //drive.followTrajectory(traj3);
+
         }
     }
     double clip(double val, double min, double max) {
