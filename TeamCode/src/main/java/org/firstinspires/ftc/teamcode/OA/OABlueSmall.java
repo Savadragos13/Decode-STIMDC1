@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
-
+import  org.firstinspires.ftc.teamcode.trajectorysequence.EmptySequenceException;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -59,14 +59,14 @@ public class OABlueSmall extends LinearOpMode {
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .lineToLinearHeading(new Pose2d(-25.591,0,Math.toRadians(Math.toRadians(-21))))
+                .turn(-90)
                 .build();
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            drive.followTrajectorySequence(traj1);
             motor3.setPower(compensatedPower(-0.65));
             motor4.setPower(compensatedPower(0.65));
-            sleep(2000);
+            drive.followTrajectorySequence(traj1);
             motor1.setPower(-0.75);
             motor2.setPower(-0.75);
             sleep(5000);        /// stam 3 secunde pentru a arunca toate bilele

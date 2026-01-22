@@ -55,19 +55,18 @@ public class OABlueSmallv2 extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
                 .back(4.72)
-                .turn(Math.toRadians(21.5))
+                .turn(Math.toRadians(20.95))
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
-                .turn(Math.toRadians(-21.5))
+                .turn(Math.toRadians(-20.95))
                 .strafeRight(30)
                 .build();
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+            motor3.setPower(compensatedPower(-0.65));
+            motor4.setPower(compensatedPower(0.65));
             drive.followTrajectorySequence(traj1);
-            motor3.setPower(compensatedPower(-0.67));
-            motor4.setPower(compensatedPower(0.67));
-            sleep(2000);
             motor1.setPower(-0.75);
             motor2.setPower(-0.75);
             sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele

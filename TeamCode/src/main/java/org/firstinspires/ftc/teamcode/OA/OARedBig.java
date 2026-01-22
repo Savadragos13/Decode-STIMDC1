@@ -89,12 +89,9 @@ public class OARedBig extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+            motor3.setPower(compensatedPower(-0.57));  ///pregatim
+            motor4.setPower(compensatedPower(0.57));
             drive.followTrajectory(traj1); ///traiectoria 1 merge inainte 51 inch
-
-            motor3.setPower(compensatedPower(-0.6));  ///pregatim
-            motor4.setPower(compensatedPower(0.6));   ///outakeul
-            sleep(2000);
-
             motor1.setPower(-0.75);         /// incepem sa aruncam bilele
             motor2.setPower(-0.75);         /// preincarcate
             sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele
