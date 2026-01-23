@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.OA;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -10,12 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
-
+/// plan de afaceri
+/// merg 59.11inch, fac stanga, iau bile si arunc
 @Config
 @Autonomous(name = "OABlueBigv2")
 public class OABlueBigv2 extends LinearOpMode {
@@ -45,7 +43,7 @@ public class OABlueBigv2 extends LinearOpMode {
         if (isStopRequested()) return;
         drive.setPoseEstimate(startPose);
         Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .forward(52)
+                .forward(59.1128326716)
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .turn(Math.toRadians(-139))
@@ -53,18 +51,16 @@ public class OABlueBigv2 extends LinearOpMode {
                         new MecanumVelocityConstraint(8, TRACK_WIDTH),
                         new ProfileAccelerationConstraint(20)
                 )
-                .lineToConstantHeading(new Vector2d(27, -40))
+                .forward(40)
                 .resetConstraints()
                 .waitSeconds(2)
                 .build();
         TrajectorySequence traj3 = drive.trajectorySequenceBuilder(traj2.end())
-                .lineToConstantHeading(new Vector2d(52, 0))
-                .turn(Math.toRadians(139))
+                .lineToLinearHeading(new Pose2d(59.1128326716, 0,139))
                 .build();
         TrajectorySequence traj4 = drive.trajectorySequenceBuilder(traj3.end())
                 .strafeRight(17)
                 .build();
-
         motor3.setPower(compensatedPower(-0.58));
         motor4.setPower(compensatedPower(0.58));
         drive.followTrajectory(traj1);
