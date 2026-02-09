@@ -35,66 +35,81 @@ public class OABlueBigv2 extends LinearOpMode {
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         Pose2d startPose = new Pose2d(0, 0, 0);
-
+        drive.setPoseEstimate(startPose);
         telemetry.addLine("Ce faci,Sebi?");
         telemetry.update();
 
         waitForStart();
         if (isStopRequested()) return;
-        drive.setPoseEstimate(startPose);
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .forward(59.1128326716)
-                .build();
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
+        // ================= TRAJECTORII =================
+
+        // 1️⃣ Merg înainte ~59 inch
+        drive.followTrajectory(
+                drive.trajectoryBuilder(startPose)
+                        .forward(59.11)
+                        .build()
+        );
+
+        // --- aici poți activa motorul 3 și 4 pentru intake ---
+        motor3.setPower(compensatedPower(-0.58));
+        motor4.setPower(compensatedPower(0.58));
+        sleep(1000); // timpul cât ia bile
+        motor1.setPower(compensatedPower(-0.75));
+        motor2.setPower(compensatedPower(-0.75));
+        sleep(2500);
+        motor3.setPower(0);
+        motor4.setPower(0);
+        motor1.setPower(-0.5);
+        motor2.setPower(-0.1);
+
+        // 2️⃣ Întoarcere și mers spre zona de aruncare
+        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .turn(Math.toRadians(-139))
+                .forward(24)
+                .waitSeconds(1)
                 .setConstraints(
                         new MecanumVelocityConstraint(8, TRACK_WIDTH),
                         new ProfileAccelerationConstraint(20)
                 )
-                .forward(40)
+                .forward(26)
                 .resetConstraints()
-                .waitSeconds(2)
+                .waitSeconds(1.7)
                 .build();
-        TrajectorySequence traj3 = drive.trajectorySequenceBuilder(traj2.end())
-                .lineToLinearHeading(new Pose2d(59.1128326716, 0,139))
+
+        drive.followTrajectorySequence(traj2);
+        sleep(1000);
+        // 3️⃣ Întoarcere către poziția inițială
+        Pose2d returnPose = new Pose2d(59.11, 0, 0); // exact ce ai definit
+        TrajectorySequence traj3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(returnPose)
                 .build();
-        TrajectorySequence traj4 = drive.trajectorySequenceBuilder(traj3.end())
+
+        drive.followTrajectorySequence(traj3);
+
+        // 4️⃣ Strafing dreapta pentru aliniere finală
+        TrajectorySequence traj4 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .strafeRight(17)
                 .build();
-        motor3.setPower(compensatedPower(-0.58));
-        motor4.setPower(compensatedPower(0.58));
-        drive.followTrajectory(traj1);
-        motor1.setPower(compensatedPower(-0.75));
-        motor2.setPower(compensatedPower(-0.75));
-        sleep(2500);
-        motor3.setPower(0);
-        motor4.setPower(0);
-        motor1.setPower(0.5);
-        motor2.setPower(0.5);
-        sleep(1000);
-        motor1.setPower(-0.5);
-        motor2.setPower(-0.1);
-        sleep(1500);
-        drive.followTrajectorySequence(traj2);
-        motor3.setPower(compensatedPower(-0.58));
-        motor4.setPower(compensatedPower(0.58));
-        sleep(1000);
-        motor1.setPower(0);
-        motor2.setPower(0);
-        drive.followTrajectorySequence(traj3);
-        motor1.setPower(compensatedPower(-0.75));
-        motor2.setPower(compensatedPower(-0.75));
-        sleep(2500);
-        motor1.setPower(0);
-        motor2.setPower(0);
-        motor3.setPower(0);
-        motor4.setPower(0);
+
         drive.followTrajectorySequence(traj4);
-        sleep(1000);
+
+        // ================= FINAL =================
+        motor1.setPower(0);
+        motor2.setPower(0);
+        motor3.setPower(0);
+        motor4.setPower(0);
+
+        sleep(10000); // pauză ca să vezi finalul
     }
+
+    double clip(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
     double compensatedPower(double powerDorita) {
         double voltage = batteryVoltageSensor.getVoltage();
         double power = powerDorita * (V_REF / voltage);
-        return Math.max(-1.0, Math.min(1.0, power));
+        telemetry.addData("voltaj", voltage);
+        return clip(power, -1.0, 1.0);
     }
 }

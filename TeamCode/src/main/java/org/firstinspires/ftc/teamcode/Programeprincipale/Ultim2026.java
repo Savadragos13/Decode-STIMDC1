@@ -113,8 +113,8 @@ public class Ultim2026 extends LinearOpMode {
                 motor3.setPower(compensatedPower(-0.65));
                 motor4.setPower(compensatedPower(0.65));
             } else if (gamepad2.left_bumper) {
-                motor3.setPower(compensatedPower(-0.55));
-                motor4.setPower(compensatedPower(0.55));
+                motor3.setPower(compensatedPower(-0.53));
+                motor4.setPower(compensatedPower(0.53    ));
             } else {
                 motor3.setPower(0);
                 motor4.setPower(0);

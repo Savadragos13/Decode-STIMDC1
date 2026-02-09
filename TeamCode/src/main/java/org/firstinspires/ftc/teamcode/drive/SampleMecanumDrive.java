@@ -27,7 +27,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-
+import com.acmerobotics.roadrunner.path.EmptyPathSegmentException;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
@@ -311,6 +311,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                 new AngularVelocityConstraint(maxAngularVel),
                 new MecanumVelocityConstraint(maxVel, trackWidth)
         ));
+    }
+
+    public static MecanumVelocityConstraint slow(double maxVel, double trackWidth){
+        return new MecanumVelocityConstraint(maxVel, trackWidth);
     }
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {

@@ -59,7 +59,8 @@ public class OABlueSmallv2 extends LinearOpMode {
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .turn(Math.toRadians(-20.95))
-                .strafeRight(30)
+                .waitSeconds(2)
+                .strafeRight(27)
                 .build();
         waitForStart();
 
@@ -70,14 +71,11 @@ public class OABlueSmallv2 extends LinearOpMode {
             motor1.setPower(-0.75);
             motor2.setPower(-0.75);
             sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele
-            drive.followTrajectorySequence(traj2);
-            motor3.setPower(0);            /// oprim motoarele
-            motor4.setPower(0);            /// de outake
-            motor1.setPower(0.5);          /// aruncam bilele care nu au fost aruncate
-            motor2.setPower(0.5);          /// pentru a nu primi penalizare
-            sleep(2000);        /// timp 2 secunde
             motor1.setPower(0);
             motor2.setPower(0);
+            motor3.setPower(0);
+            motor4.setPower(0);
+            drive.followTrajectorySequence(traj2);
             sleep(25000);
         }
     }

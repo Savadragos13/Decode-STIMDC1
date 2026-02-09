@@ -59,7 +59,8 @@ public class OARedSmallv2 extends LinearOpMode {
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .turn(Math.toRadians(20.95))
-                .strafeLeft(30)
+                .waitSeconds(2)
+                .strafeLeft(27)
                 .build();
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
@@ -69,14 +70,11 @@ public class OARedSmallv2 extends LinearOpMode {
             motor1.setPower(-0.75);
             motor2.setPower(-0.75);
             sleep(3000);        /// stam 3 secunde pentru a arunca toate bilele
-            drive.followTrajectorySequence(traj2);
-            motor3.setPower(0);            /// oprim motoarele
-            motor4.setPower(0);            /// de outake
-            motor1.setPower(0.5);          /// aruncam bilele care nu au fost aruncate
-            motor2.setPower(0.5);          /// pentru a nu primi penalizare
-            sleep(2000);        /// timp 2 secunde
             motor1.setPower(0);
             motor2.setPower(0);
+            motor3.setPower(0);
+            motor4.setPower(0);        /// stam 3 secunde pentru a arunca toate bilele
+            drive.followTrajectorySequence(traj2);
             sleep(25000);
         }
     }

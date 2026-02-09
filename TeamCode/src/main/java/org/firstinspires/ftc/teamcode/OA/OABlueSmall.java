@@ -63,7 +63,7 @@ public class OABlueSmall extends LinearOpMode {
                 .turn(Math.toRadians(21))
                 .build();
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj1.end())
-                .lineToLinearHeading(new Pose2d(21.6535433,4.72,69))
+                .lineToLinearHeading(new Pose2d(-21.6535433,4.72,69))
                 .build();
         TrajectorySequence traj3 = drive.trajectorySequenceBuilder((traj2.end()))
                 .setConstraints(new MecanumVelocityConstraint(8, TRACK_WIDTH),

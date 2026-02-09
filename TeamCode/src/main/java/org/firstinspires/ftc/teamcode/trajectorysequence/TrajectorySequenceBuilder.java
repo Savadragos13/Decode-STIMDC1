@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.trajectory.TimeProducer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.Angle;
@@ -67,6 +68,7 @@ public class TrajectorySequenceBuilder{
 
     private double lastDurationTraj;
     private double lastDisplacementTraj;
+    private MarkerCallback MarkerCallback;
 
     public TrajectorySequenceBuilder(
         Pose2d startPose,
@@ -248,9 +250,14 @@ public class TrajectorySequenceBuilder{
         return addPath(() -> currentTrajectoryBuilder.splineTo(endPosition, endHeading, velConstraint, accelConstraint));
     }
 
-    public TrajectorySequenceBuilder splineToConstantHeading(Vector2d endPosition, double endHeading) {
+    public TrajectorySequenceBuilder splineToConstantHeading(Vector2d endPosition, double endHeading, MecanumVelocityConstraint slow) {
         return addPath(() -> currentTrajectoryBuilder.splineToConstantHeading(endPosition, endHeading, currentVelConstraint, currentAccelConstraint));
     }
+
+    public TrajectorySequenceBuilder splineToConstantHeading(Vector2d endPosition, double endHeading) {
+        return addPath(() -> currentTrajectoryBuilder.splineToConstantHeading(endPosition, endHeading));
+    }
+
 
     public TrajectorySequenceBuilder splineToConstantHeading(
             Vector2d endPosition,
@@ -261,17 +268,15 @@ public class TrajectorySequenceBuilder{
         return addPath(() -> currentTrajectoryBuilder.splineToConstantHeading(endPosition, endHeading, velConstraint, accelConstraint));
     }
 
-    public TrajectorySequenceBuilder splineToLinearHeading(Pose2d endPose, double endHeading) {
+    public TrajectorySequenceBuilder splineToLinearHeading(Pose2d endPose, double endHeading, TrajectoryVelocityConstraint currentVelConstraint) {
         return addPath(() -> currentTrajectoryBuilder.splineToLinearHeading(endPose, endHeading, currentVelConstraint, currentAccelConstraint));
     }
 
     public TrajectorySequenceBuilder splineToLinearHeading(
             Pose2d endPose,
-            double endHeading,
-            TrajectoryVelocityConstraint velConstraint,
-            TrajectoryAccelerationConstraint accelConstraint
+            double endHeading
     ) {
-        return addPath(() -> currentTrajectoryBuilder.splineToLinearHeading(endPose, endHeading, velConstraint, accelConstraint));
+        return addPath(() -> currentTrajectoryBuilder.splineToLinearHeading(endPose, endHeading));
     }
 
     public TrajectorySequenceBuilder splineToSplineHeading(Pose2d endPose, double endHeading) {
@@ -678,6 +683,9 @@ public class TrajectorySequenceBuilder{
 
         return displacementToTime(sequenceSegments, closestPoint.thisPathDisplacement);
     }
+
+
+
 
     private interface AddPathCallback {
         void run();
